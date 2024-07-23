@@ -1,95 +1,63 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import solve from "@/utils/dentaku";
+import { useState } from "react";
+
+const HowToUse = () => {
+  const bnf = `
+<expr>     ::= <term> [ ('+' | '-') <term> ]*
+<term>     ::= <factor> [ ('*' | '/' | '^' | '') <factor> ]*
+<factor>   ::= '(' <expr> ')' | <number> | <variable> | <function>
+<function> ::= <func-name> '(' <expr> [ , <expr>]* ')'
+<number>   ::= \d+(\.\d+)?
+<variable> ::= [a-z]
+  `;
+
+  return (
+    <>
+      <p>
+        各行 <code>{`<expr>`}</code>を改行区切りで記述する。
+      </p>
+      <p>
+        変数宣言は <code>{`set(<variable>, <number>)`}</code> で行う。
+      </p>
+      <pre>{bnf}</pre>
+      <p>例</p>
+      <pre>{`
+set(a, 1) 
+set(b, 2)
+a + b
+sum(x, 1, 10, x)
+      `}</pre>
+      <p>function は以下が使用可能。</p>
+      <pre>{`
+set(<variable>, <expr>) // 変数宣言 <variable> に <expr> を代入
+sqrt(<expr>) // 平方根
+sum(<variable>, <integer>, <integer>, <expr>) // <variable> を <integer> から <integer> までの範囲で <expr> を計算した総和
+      `}</pre>
+    </>
+  );
+};
 
 export default function Home() {
+  const [input, setInput] = useState("");
+  const [result, setResult] = useState("");
+
+  const handleClick = () => {
+    setResult(solve(input));
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    <>
+      <HowToUse />
+      <textarea
+        cols={50}
+        rows={10}
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+      />
+      <button onClick={handleClick}>実行</button>
+      {result && <pre>{result}</pre>}
+    </>
   );
 }
