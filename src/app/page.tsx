@@ -26,7 +26,9 @@ const HowToUse = () => {
       <pre>{`
 set(a, 1) 
 set(b, 2)
+set(c, 1)
 a + b
+(sqrt(b^2 - 4ac) - b) / (2a) 
 sum(x, 1, 10, x)
       `}</pre>
       <p>function は以下が使用可能。</p>
@@ -58,6 +60,9 @@ export default function Home() {
       />
       <button onClick={handleClick}>実行</button>
       {result && <pre>{result}</pre>}
+      <p>
+        <a href="https://github.com/Kyo-s-s/dentaku">GitHub</a>
+      </p>
     </>
   );
 }
